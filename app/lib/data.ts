@@ -10,11 +10,10 @@ import {
 import { formatCurrency } from './utils';
 
 // Use a global singleton to avoid exhausting Postgres connections
-let sql: ReturnType<typeof postgres>;
-if (!(globalThis as any).__POSTGRES__) {
-  (globalThis as any).__POSTGRES__ = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+if (!(globalThis as Record<string, unknown>).__POSTGRES__) {
+  (globalThis as Record<string, unknown>).__POSTGRES__ = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 }
-sql = (globalThis as any).__POSTGRES__;
+const sql = (globalThis as Record<string, unknown>).__POSTGRES__ as ReturnType<typeof postgres>;
 
 export async function fetchRevenue() {
   try {
